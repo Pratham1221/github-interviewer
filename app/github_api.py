@@ -33,13 +33,6 @@ def get_repo_readme(username, repo_name):
     if response.status_code != 200:
         raise Exception(f"Error fetching README: {response.status_code}")
 
-    return response.json()
-
-import base64
-
-def decode_github_content(encoded_content: str) -> str:
-    """
-    Decodes GitHub base64 encoded file content (like README.md).
-    """
+    encoded_content = response.json()["content"]
     decoded_bytes = base64.b64decode(encoded_content)
     return decoded_bytes.decode("utf-8")

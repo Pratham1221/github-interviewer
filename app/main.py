@@ -1,11 +1,23 @@
 from github_api import *
 import json
+from analyzer import analyze_repos
 
 username = input("Enter GitHub username: ")
 
+# user = get_user(username)
+# repos = get_repos(username)
+# repo_readme = get_repo_readme(username, repos[0]['name'])
+
 user = get_user(username)
 repos = get_repos(username)
-repo_readme = get_repo_readme(username, repos[0]['name'])
+
+profile = analyze_repos(
+    user,
+    repos,
+    get_repo_readme
+)
+
+print(profile["project_summaries"])
 
 # print("\nUSER INFO")
 # print("Name:", user.get("name"))
@@ -22,12 +34,11 @@ repo_readme = get_repo_readme(username, repos[0]['name'])
 
 # print("\nUSER JSON:")
 # print(json.dumps(user, indent=2))
-
 # print("\nFIRST REPO JSON:")
 # print(json.dumps(repos[0], indent=2))
 
-print("\nFIRST REPO README JSON:")
-print(json.dumps(repo_readme, indent=2))
+# print("\nFIRST REPO README JSON:")
+# print(json.dumps(repo_readme, indent=2))
 
-print("\nDecoded README Content:")
-print(decode_github_content(repo_readme['content']))
+# print("\nDecoded README Content:")
+# print(decode_github_content(repo_readme['content']))
