@@ -3,11 +3,16 @@ import json
 from analyzer import analyze_repos
 from prompt_builder import build_interview_prompt
 from llm import generate_interview
+import os
 
-def save_to_markdown(content, filename="interview.md"):
+
+def save_to_markdown(content, filename="../files/interview.md"):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    
     with open(filename, "w", encoding="utf-8") as f:
         f.write(content)
 
+        
 username = input("Enter GitHub username: ")
 
 # user = get_user(username)
@@ -26,7 +31,7 @@ profile = analyze_repos(
 prompt = build_interview_prompt(profile)
 response = generate_interview(prompt)
 save_to_markdown(response)
-print("Interview saved to interview.md")
+print("Interview saved to files/interview.md")
 #print(response)
 
 #print(profile["project_summaries"])
@@ -55,6 +60,3 @@ print("Interview saved to interview.md")
 # print("\nDecoded README Content:")
 # print(decode_github_content(repo_readme['content']))
 
-def save_to_markdown(content, filename="interview.md"):
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(content)
