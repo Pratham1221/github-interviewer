@@ -25,43 +25,83 @@ This project takes a GitHub username and performs the following steps:
 
 # ⚙️ Architecture
 
-GitHub API → Data Collection → Analysis Layer → Prompt Builder → LLM → Markdown Output
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    React Frontend (Vite)                    │
+│              (http://localhost:3000)                        │
+└─────────────────┬───────────────────────────────────────────┘
+                  │ axios calls
+                  ↓
+┌─────────────────────────────────────────────────────────────┐
+│              FastAPI Backend (Uvicorn)                      │
+│              (http://localhost:8000)                        │
+│  • /api/analyze - Generate interview for username          │
+│  • /docs - Interactive API documentation                   │
+└────────┬─────────────────┬────────────────────┬─────────────┘
+         │                 │                    │
+         ↓                 ↓                    ↓
+   GitHub API      Prompt Builder         LLM (Gemini)
+   Data Extract    + Analysis              Interview Gen
+```
 
 ---
 
 # 🛠 Tech Stack
 
-* Python
-* requests (GitHub API communication)
-* python-dotenv (environment variable management)
-* google-genai (LLM integration)
-* Markdown (output formatting)
+## Backend
+* **Python** - Core language
+* **FastAPI** - Modern async web framework
+* **Uvicorn** - ASGI server
+* **requests** - GitHub API communication
+* **python-dotenv** - Environment variable management
+* **google-genai** - LLM integration (Gemini)
+
+## Frontend
+* **React 18** - UI framework
+* **Vite** - Fast build tool
+* **Axios** - HTTP client
+* **CSS3** - Styling with animations
+
+## Additional
+* **Pydantic** - Data validation
+* **Docker** - Containerization
 
 ---
 
-# 📦 Installation
+# 📦 Installation & Setup
 
-## 1. Clone the repository
+## Quick Start (Web App)
+
+The easiest way to run the web app with both backend and frontend:
+
+### macOS / Linux
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+### Windows
+
+```bash
+start.bat
+```
+
+This will:
+- Install Python and Node dependencies
+- Start FastAPI backend (http://localhost:8000)
+- Start React frontend (http://localhost:3000)
+
+## Manual Setup
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/your-username/github-interviewer.git
 cd github-interviewer
 ```
 
-## 2. Create a virtual environment
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-## 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-## 4. Set up environment variables
+### 2. Set up environment variables
 
 Create a `.env` file in the root directory:
 
@@ -69,7 +109,43 @@ Create a `.env` file in the root directory:
 GEMINI_API_KEY=your_api_key_here
 ```
 
-## 5. Run the project
+### 3. Install backend dependencies
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 4. Install frontend dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+### 5. Run the application
+
+In one terminal (backend):
+```bash
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd app
+python server.py
+```
+
+In another terminal (frontend):
+```bash
+cd frontend
+npm run dev
+```
+
+Then visit:
+- Frontend: http://localhost:3000
+- Backend API docs: http://localhost:8000/docs
+
+### CLI Mode (Original)
+
+To use the original CLI mode:
 
 ```bash
 python app/main.py
@@ -103,7 +179,29 @@ This file contains a structured AI-generated interview based on the user’s Git
 
 ---
 
-# 🚀 Purpose
+# 🌐 Deployment
+
+## Docker
+
+Build and run with Docker:
+
+```bash
+docker build -t github-interviewer .
+docker run -p 8000:8000 -e GEMINI_API_KEY=your_key github-interviewer
+```
+
+## Cloud Deployment
+
+### Backend (FastAPI)
+- **Railway**: `railway up` 
+- **Render**: Connect GitHub repo, set start command to `cd app && python server.py`
+- **Fly.io**: Use provided Dockerfile
+
+### Frontend (React)
+- **Vercel**: `vercel` (auto-detected)
+- **Netlify**: `npm run build`, deploy `dist/` folder
+
+---
 
 This project was built to explore:
 
