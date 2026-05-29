@@ -5,6 +5,7 @@ Provides REST endpoints for interview generation.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import os
 import sys
@@ -44,16 +45,6 @@ class InterviewResponse(BaseModel):
     error: str | None = None
 
 
-@app.get("/")
-def read_root():
-    """Health check endpoint."""
-    return {
-        "status": "ok",
-        "message": "GitHub Interviewer API is running",
-        "docs": "/docs"
-    }
-
-
 @app.post("/api/analyze", response_model=InterviewResponse)
 def analyze_github_user(request: InterviewRequest):
     """
@@ -73,6 +64,15 @@ def analyze_github_user(request: InterviewRequest):
 def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}
+
+
+# Serve built frontend files if available
+frontend_dist = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+)
+
+if os.path.isdir(frontend_dist):
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
 
 
 if __name__ == "__main__":

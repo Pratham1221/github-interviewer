@@ -1,25 +1,24 @@
-FROM python:3.11-slim
+# Build stage for the frontend
+FROM node:20-alpine AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ .
+RUN npm run build
 
+# Runtime stage for the backend
+FROM python:3.11-slim
 WORKDIR /app
 
-# Install Node.js
-RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements and install Python dependencies
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend code
+# Copy backend source
 COPY app/ app/
 
-# Copy frontend
-COPY frontend/ frontend/
-WORKDIR /app/frontend
-RUN npm install && npm run build
-WORKDIR /app
+# Copy built frontend assets to be served by FastAPI
+COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
-# Expose ports
 EXPOSE 8000
-
-# Start backend (frontend is built and served by backend)
-CMD ["python", "app/server.py"]
+CMD ["uvicorn", "app.server:app", "--host", "0.0.0.0", "--port", "8000"]
