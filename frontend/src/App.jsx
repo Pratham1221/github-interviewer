@@ -35,6 +35,11 @@ function App() {
       <header className="app-header">
         <h1>📊 GitHub AI Interviewer</h1>
         <p>Generate personalized technical interviews from GitHub profiles</p>
+        <p className="repo-link">
+          <a href="https://github.com/Pratham1221/github-interviewer" target="_blank" rel="noopener noreferrer">
+            View repository on GitHub
+          </a>
+        </p>
       </header>
 
       <main className="app-main">

@@ -36,6 +36,20 @@ body {
   opacity: 0.9;
 }
 
+.repo-link {
+  margin-top: 1rem;
+}
+
+.repo-link a {
+  color: #ffeaa7;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.repo-link a:hover {
+  text-decoration: underline;
+}
+
 .app-main {
   flex: 1;
   max-width: 900px;
