@@ -66,6 +66,12 @@ def health_check():
     return {"status": "healthy"}
 
 
+@app.get("/")
+def read_root():
+    """Fallback root endpoint."""
+    return {"message": "GitHub Interviewer API is live. Use /api/analyze to generate interviews."}
+
+
 # Serve built frontend files if available
 frontend_dist = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
