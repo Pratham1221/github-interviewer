@@ -16,7 +16,8 @@ function App() {
     setResult(null)
 
     try {
-      const response = await axios.post('/api/analyze', { username })
+      const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+      const response = await axios.post(`${apiBaseUrl}/api/analyze`, { username })
       
       if (response.data.status === 'error') {
         setError(response.data.error)
